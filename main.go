@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/achmadrizkin/go_social_media_API/explore"
 	"github.com/achmadrizkin/go_social_media_API/handler"
 	"github.com/achmadrizkin/go_social_media_API/user"
 	"github.com/gin-gonic/gin"
@@ -22,17 +23,24 @@ func main() {
 		log.Fatal("DB Connection Error")
 	}
 
-	db.AutoMigrate(&user.User{})
+	db.AutoMigrate(&user.User{}, &explore.Explore{})
 
 	// API Versioning
 	v1 := r.Group("/v1")
 
-	//
+	// USER
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
 	userHandler := handler.NewBookHandler(userService)
 
 	v1.GET("/users/:name_user", userHandler.GetUserByName)
+
+	// EXPLORE
+	exploreRepository := explore.NewRepository(db)
+	exploreService := explore.NewService(exploreRepository)
+	exploreHandler := handler.NewExploreHandler(exploreService)
+
+	v1.POST("/post", exploreHandler.PostExploreHandler)
 
 	r.Run(":3000")
 }
