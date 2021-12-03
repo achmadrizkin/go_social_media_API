@@ -41,6 +41,7 @@ func main() {
 	exploreHandler := handler.NewExploreHandler(exploreService)
 
 	v1.POST("/post", exploreHandler.PostExploreHandler)
+	v1.GET("/explore/:user", exploreHandler.GetExploreNotUserAndOrderByLike)
 
 	r.Run(":3000")
 }

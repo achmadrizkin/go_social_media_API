@@ -2,6 +2,7 @@ package explore
 
 type Service interface {
 	Create(exploreRequest ExploreRequest) (Explore, error)
+	FindByNotUserAndOrderByLike(user string) ([]Explore, error)
 }
 
 type service struct {
@@ -32,5 +33,11 @@ func (s *service) Create(exploreRequest ExploreRequest) (Explore, error) {
 	newBook, err := s.repository.Create(book)
 
 	return newBook, err
+	// return s.repository.FindAll()
+}
+
+func (s *service) FindByNotUserAndOrderByLike(user string) ([]Explore, error) {
+	books, err := s.repository.FindByNotUserAndOrderByLike(user)
+	return books, err
 	// return s.repository.FindAll()
 }
