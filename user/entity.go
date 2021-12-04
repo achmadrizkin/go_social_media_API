@@ -5,6 +5,7 @@ type User struct {
 	Name_user  string
 	Email_user string
 	Image_url  string
+	Post       int
 	Following  int
 	Followers  int
 }

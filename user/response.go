@@ -7,4 +7,5 @@ type UserResponse struct {
 	Image_url  string `json:"image_url"`
 	Following  int    `json:"following"`
 	Followers  int    `json:"followers"`
+	Post       int    `json:"post"`
 }

@@ -39,6 +39,54 @@ func (h *userHandler) GetUserByName(c *gin.Context) {
 	}
 }
 
+func (h *userHandler) GetUserByEmail(c *gin.Context) {
+	email_user := c.Param("email_user")
+
+	b, err := h.userService.FindByEmail(email_user)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+	}
+
+	var booksResponse []user.UserResponse
+	for _, b := range b {
+		bookResponse := converToAllUserResponse(b)
+		booksResponse = append(booksResponse, bookResponse)
+	}
+
+	if booksResponse != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"data": booksResponse,
+		})
+	}
+}
+
+func (h *userHandler) CreateIfNotExistOrUpdateIfExist(c *gin.Context) {
+	email_user := c.Param("email_user")
+
+	b, err := h.userService.CreateIfNotExistOrUpdateIfExist(email_user)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+	}
+
+	var booksResponse []user.UserResponse
+	for _, b := range b {
+		bookResponse := converToAllUserResponse(b)
+		booksResponse = append(booksResponse, bookResponse)
+	}
+
+	if booksResponse != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"data": booksResponse,
+		})
+	}
+}
+
 func converToAllUserResponse(b user.User) user.UserResponse {
 	return user.UserResponse{
 		Id:         b.Id,
@@ -47,5 +95,6 @@ func converToAllUserResponse(b user.User) user.UserResponse {
 		Image_url:  b.Image_url,
 		Following:  b.Following,
 		Followers:  b.Followers,
+		Post:       b.Post,
 	}
 }

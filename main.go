@@ -34,6 +34,8 @@ func main() {
 	userHandler := handler.NewBookHandler(userService)
 
 	v1.GET("/users/:name_user", userHandler.GetUserByName)
+	v1.GET("/users/email/:email_user", userHandler.GetUserByEmail)
+	v1.POST("/users/a/:email_user", userHandler.CreateIfNotExistOrUpdateIfExist)
 
 	// EXPLORE
 	exploreRepository := explore.NewRepository(db)
