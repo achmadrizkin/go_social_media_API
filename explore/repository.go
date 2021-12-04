@@ -7,6 +7,7 @@ import (
 type Repository interface {
 	Create(explore Explore) (Explore, error)
 	FindByNotUserAndOrderByLike(user string) ([]Explore, error)
+	GetByEmailAndOrderByCreateAt(email string) ([]Explore, error)
 }
 
 type repository struct {
@@ -27,6 +28,14 @@ func (r *repository) FindByNotUserAndOrderByLike(user string) ([]Explore, error)
 	var explore []Explore
 
 	err := r.db.Where("email_user NOT LIKE ? ORDER BY like_post DESC", user).Find(&explore).Error
+
+	return explore, err
+}
+
+func (r *repository) GetByEmailAndOrderByCreateAt(email string) ([]Explore, error) {
+	var explore []Explore
+
+	err := r.db.Where("email_user LIKE ? ORDER BY created_at DESC", email).Find(&explore).Error
 
 	return explore, err
 }
