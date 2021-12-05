@@ -58,7 +58,7 @@ func (h *exploreHandler) GetExploreNotUserAndOrderByLike(c *gin.Context) {
 	var allproductssResponse []explore.ExploreResponse
 
 	for _, b := range allproductss {
-		allproductsResponse := converToAllProductResponse(b)
+		allproductsResponse := converToExploreResponse(b)
 		allproductssResponse = append(allproductssResponse, allproductsResponse)
 	}
 
@@ -83,7 +83,7 @@ func (h *exploreHandler) GetExploreByEmailAndOrderByCreateAt(c *gin.Context) {
 	var allproductssResponse []explore.ExploreResponse
 
 	for _, b := range allproductss {
-		allproductsResponse := converToAllProductResponse(b)
+		allproductsResponse := converToExploreResponse(b)
 		allproductssResponse = append(allproductssResponse, allproductsResponse)
 	}
 
@@ -95,7 +95,7 @@ func (h *exploreHandler) GetExploreByEmailAndOrderByCreateAt(c *gin.Context) {
 	}
 }
 
-func converToAllProductResponse(b explore.Explore) explore.ExploreResponse {
+func converToExploreResponse(b explore.Explore) explore.ExploreResponse {
 	return explore.ExploreResponse{
 		Id:               b.Id,
 		Name_user:        b.Name_user,

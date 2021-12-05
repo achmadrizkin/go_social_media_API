@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/achmadrizkin/go_social_media_API/allproducts"
 	"github.com/achmadrizkin/go_social_media_API/explore"
 	"github.com/achmadrizkin/go_social_media_API/handler"
 	"github.com/achmadrizkin/go_social_media_API/reels"
@@ -24,7 +25,7 @@ func main() {
 		log.Fatal("DB Connection Error")
 	}
 
-	db.AutoMigrate(&user.User{}, &explore.Explore{}, &reels.Reels{})
+	db.AutoMigrate(&user.User{}, &explore.Explore{}, &reels.Reels{}, &allproducts.AllProduct{})
 
 	// API Versioning
 	v1 := r.Group("/v1")
@@ -54,6 +55,22 @@ func main() {
 
 	v1.POST("/reels", reelsHandler.PostReelsHandler)
 	v1.GET("/reels/e/:user", reelsHandler.GetReelsNotUserAndOrderByLike)
+
+	// ALL PRODUCTS
+	allProductRepository := allproducts.NewRepository(db)
+	allProductService := allproducts.NewService(allProductRepository)
+	allProductHandler := handler.NewAllProductHandler(allProductService)
+
+	v1.POST("/products", allProductHandler.PostBooksHandler)
+	v1.GET("/products", allProductHandler.GetBooksList)
+	v1.GET("/products/:id", allProductHandler.GetBookById)
+	v1.GET("/products/category/:category", allProductHandler.GetBookByCategory)
+	v1.GET("/products/user/:email_user", allProductHandler.GetBookByUser)
+	v1.PUT("/products/:id", allProductHandler.UpdateBook)
+	v1.DELETE("/products/:id", allProductHandler.DeleteBook)
+
+	// search ALL PRODUCTS
+	v1.GET("/products/s/:name_product", allProductHandler.GetProductListByName)
 
 	r.Run(":3000")
 }
