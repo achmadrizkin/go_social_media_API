@@ -104,8 +104,6 @@ func converToAllProductResponse(b explore.Explore) explore.ExploreResponse {
 		Image_post:       b.Image_post,
 		Description_post: b.Description_post,
 		Like_post:        b.Like_post,
-		Following:        b.Following,
-		Followers:        b.Followers,
 		CreatedAt:        b.CreatedAt,
 		UpdateAt:         b.UpdateAt,
 	}

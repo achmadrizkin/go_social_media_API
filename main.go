@@ -5,6 +5,7 @@ import (
 
 	"github.com/achmadrizkin/go_social_media_API/explore"
 	"github.com/achmadrizkin/go_social_media_API/handler"
+	"github.com/achmadrizkin/go_social_media_API/reels"
 	"github.com/achmadrizkin/go_social_media_API/user"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
@@ -23,7 +24,7 @@ func main() {
 		log.Fatal("DB Connection Error")
 	}
 
-	db.AutoMigrate(&user.User{}, &explore.Explore{})
+	db.AutoMigrate(&user.User{}, &explore.Explore{}, &reels.Reels{})
 
 	// API Versioning
 	v1 := r.Group("/v1")
@@ -46,7 +47,13 @@ func main() {
 	v1.GET("/explore/:user", exploreHandler.GetExploreNotUserAndOrderByLike)
 	v1.GET("/explore/user/:email", exploreHandler.GetExploreByEmailAndOrderByCreateAt)
 
-	// GET BY EMAIL AND ORDER BY CreateAt http://localhost:3000/v1/explore/user/:email
+	// REELS
+	reelsRepository := reels.NewRepository(db)
+	reelsService := reels.NewService(reelsRepository)
+	reelsHandler := handler.NewReelsHandler(reelsService)
+
+	v1.POST("/reels", reelsHandler.PostReelsHandler)
+	v1.GET("/reels/e/:user", reelsHandler.GetReelsNotUserAndOrderByLike)
 
 	r.Run(":3000")
 }

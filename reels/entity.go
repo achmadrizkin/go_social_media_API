@@ -1,14 +1,14 @@
-package explore
+package reels
 
 import "time"
 
-type Explore struct {
+type Reels struct {
 	Id               int
 	Name_user        string
 	Email_user       string
 	Image_url        string
 
-	Image_post       string
+	Video_post       string
 	Description_post string
 	Like_post        int
 	
