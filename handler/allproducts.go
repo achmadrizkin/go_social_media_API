@@ -63,6 +63,27 @@ func (h *allProductHandler) GetBookById(c *gin.Context) {
 	})
 }
 
+func (h *allProductHandler) GetBookByProductNameAndEmail(c *gin.Context) {
+	name_product := c.Param("name_product")
+	email := c.Param("email")
+
+	// call service
+	b, err := h.allproductsService.FindByNameAndEmail(name_product, email)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+	}
+
+	allproductsResponse := converToAllProductResponse(b)
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": allproductsResponse,
+	})
+
+}
+
+
 func (h *allProductHandler) GetBookByCategory(c *gin.Context) {
 	category := c.Param("category")
 

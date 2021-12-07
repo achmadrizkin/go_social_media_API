@@ -5,6 +5,7 @@ type Service interface {
 	FindByID(ID int) (AllProduct, error)
 	FindByCategory(category string) ([]AllProduct, error)
 	FindByUser(email_user string) ([]AllProduct, error)
+	FindByNameAndEmail(name string, email string) (AllProduct, error)
 	FindByNameProduct(name_product string, price string, email_user string) (AllProduct, error)
 	FindByNameProductList(name_product string) ([]AllProduct, error)
 	Create(allProductRequest AllProductRequest) (AllProduct, error)
@@ -43,6 +44,12 @@ func (s *service) FindByCategory(category string) ([]AllProduct, error) {
 
 func (s *service) FindByUser(email_user string) ([]AllProduct, error) {
 	books, err := s.repository.FindByUser(email_user)
+	return books, err
+	// return s.repository.FindAll()
+}
+
+func (s *service) FindByNameAndEmail(name string, email string) (AllProduct, error) {
+	books, err := s.repository.FindByNameAndEmail(name, email)
 	return books, err
 	// return s.repository.FindAll()
 }

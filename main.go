@@ -69,6 +69,9 @@ func main() {
 	v1.PUT("/products/:id", allProductHandler.UpdateBook)
 	v1.DELETE("/products/:id", allProductHandler.DeleteBook)
 
+	// GET BY name_product, and email
+	v1.GET("/products/a/:name_product/:email", allProductHandler.GetBookByProductNameAndEmail)
+
 	// search ALL PRODUCTS
 	v1.GET("/products/s/:name_product", allProductHandler.GetProductListByName)
 

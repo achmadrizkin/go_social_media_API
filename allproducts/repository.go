@@ -10,6 +10,7 @@ type Repository interface {
 	FindAll() ([]AllProduct, error)
 	FindByID(ID int) (AllProduct, error)
 	FindByCategory(category string) ([]AllProduct, error)
+	FindByNameAndEmail(name string, email string) (AllProduct, error)
 	FindByUser(email_user string) ([]AllProduct, error)
 	FindByNameProduct(name_product string, price string, email_user string) (AllProduct, error)
 	FindByNameProductList(name_product string) ([]AllProduct, error)
@@ -47,6 +48,16 @@ func (r *repository) FindByCategory(category string) ([]AllProduct, error) {
 	// err := r.db.Where("title = ?", title).First(&books).Error
 
 	err := r.db.Where("category LIKE ?", category).Find(&allProducts).Error
+
+	return allProducts, err
+}
+
+func (r *repository) FindByNameAndEmail(name string, email string) (AllProduct, error) {
+	var allProducts AllProduct
+	// err := r.db.Where("title = ?", title).First(&books).Error
+
+	value := fmt.Sprintf("%%%s%%", name)
+	err := r.db.Where("name_product LIKE ? AND email_user LIKE ?", value, email).Find(&allProducts).Error
 
 	return allProducts, err
 }
