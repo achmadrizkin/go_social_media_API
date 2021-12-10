@@ -4,10 +4,12 @@ import (
 	"log"
 
 	"github.com/achmadrizkin/go_social_media_API/allproducts"
+	"github.com/achmadrizkin/go_social_media_API/comment"
 	"github.com/achmadrizkin/go_social_media_API/explore"
 	"github.com/achmadrizkin/go_social_media_API/handler"
 	"github.com/achmadrizkin/go_social_media_API/reels"
 	"github.com/achmadrizkin/go_social_media_API/user"
+	userfollower "github.com/achmadrizkin/go_social_media_API/userFollower"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -25,7 +27,7 @@ func main() {
 		log.Fatal("DB Connection Error")
 	}
 
-	db.AutoMigrate(&user.User{}, &explore.Explore{}, &reels.Reels{}, &allproducts.AllProduct{})
+	db.AutoMigrate(&user.User{}, &explore.Explore{}, &reels.Reels{}, &allproducts.AllProduct{}, &comment.Comment{}, &userfollower.UserFollower{})
 
 	// API Versioning
 	v1 := r.Group("/v1")
@@ -74,6 +76,14 @@ func main() {
 
 	// search ALL PRODUCTS
 	v1.GET("/products/s/:name_product", allProductHandler.GetProductListByName)
+
+	// COMMENT
+	commentRepository := comment.NewRepository(db)
+	commentService := comment.NewService(commentRepository)
+	commentHandler := handler.NewCommentHandler(commentService)
+
+	v1.POST("/comment/a", commentHandler.PostCommentHandler)
+	v1.GET("/comment/:postUser/:toId", commentHandler.GetToUserAndPostUser)
 
 	r.Run(":3000")
 }
