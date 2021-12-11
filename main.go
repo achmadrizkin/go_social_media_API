@@ -9,7 +9,7 @@ import (
 	"github.com/achmadrizkin/go_social_media_API/handler"
 	"github.com/achmadrizkin/go_social_media_API/reels"
 	"github.com/achmadrizkin/go_social_media_API/user"
-	userfollower "github.com/achmadrizkin/go_social_media_API/userFollower"
+	userfollower "github.com/achmadrizkin/go_social_media_API/user_follower"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -84,6 +84,13 @@ func main() {
 
 	v1.POST("/comment/a", commentHandler.PostCommentHandler)
 	v1.GET("/comment/:postUser/:toId", commentHandler.GetToUserAndPostUser)
+
+	// user followers
+	userFollowersRepository := userfollower.NewRepository(db)
+	userFollowersService := userfollower.NewService(userFollowersRepository)
+	userFollowersHandler := handler.NewUserFollowerHandler(userFollowersService)
+
+	v1.GET("/user/followers/:user", userFollowersHandler.GetJoinUserToUserFollowers)
 
 	r.Run(":3000")
 }

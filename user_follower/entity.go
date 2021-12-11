@@ -12,3 +12,13 @@ type UserFollower struct {
 	CreatedAt time.Time
 	UpdateAt  time.Time
 }
+
+type User struct {
+	Id         int
+	Name_user  string
+	Email_user string
+	Image_url  string
+	Post       int
+	Following  int
+	Followers  int
+}
