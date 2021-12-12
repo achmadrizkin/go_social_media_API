@@ -4,6 +4,7 @@ type Service interface {
 	Create(exploreRequest ExploreRequest) (Explore, error)
 	FindByNotUserAndOrderByLike(user string) ([]Explore, error)
 	GetByEmailAndOrderByCreateAt(email string) ([]Explore, error)
+	GetByUserFollowing(email_user string) ([]Explore, error)
 }
 
 type service struct {
@@ -38,5 +39,10 @@ func (s *service) FindByNotUserAndOrderByLike(user string) ([]Explore, error) {
 
 func (s *service) GetByEmailAndOrderByCreateAt(email string) ([]Explore, error) {
 	books, err := s.repository.GetByEmailAndOrderByCreateAt(email)
+	return books, err
+}
+
+func (s *service) GetByUserFollowing(email string) ([]Explore, error) {
+	books, err := s.repository.GetByUserFollowing(email)
 	return books, err
 }

@@ -49,6 +49,7 @@ func main() {
 	v1.POST("/post", exploreHandler.PostExploreHandler)
 	v1.GET("/explore/:user", exploreHandler.GetExploreNotUserAndOrderByLike)
 	v1.GET("/explore/user/:email", exploreHandler.GetExploreByEmailAndOrderByCreateAt)
+	v1.GET("/explore/home/:email", exploreHandler.GetUserFollowingPost)
 
 	// REELS
 	reelsRepository := reels.NewRepository(db)
