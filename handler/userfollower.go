@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/achmadrizkin/go_social_media_API/user_follower"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type userFollowerHandler struct {
@@ -14,6 +16,35 @@ type userFollowerHandler struct {
 func NewUserFollowerHandler(userfollowerService userfollower.Service) *userFollowerHandler {
 	return &userFollowerHandler{userfollowerService}
 }
+
+func (h *userFollowerHandler) PostUserFollowerHandler(c *gin.Context) {
+	var userFollowerRequest userfollower.UserFollowerRequest
+
+	err := c.ShouldBindJSON(&userFollowerRequest)
+
+	if err != nil {
+		// log.Fatal(err) -> kalau terjadi error, server mati
+		for _, e := range err.(validator.ValidationErrors) {
+			errMessage := fmt.Sprintf("Error on filled %s, condition: %s", e.Field(), e.ActualTag())
+			c.JSON(http.StatusBadRequest, errMessage)
+
+			// gunakan return untuk tidak melanjutkan yang dibawah
+			return
+		}
+	}
+
+	hoodie, err := h.userfollowerService.Create(userFollowerRequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": hoodie,
+	})
+}
+
 
 func (h *userFollowerHandler) GetJoinUserToUserFollowers(c *gin.Context) {
 	user := c.Param("user")

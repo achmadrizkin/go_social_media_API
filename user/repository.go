@@ -9,6 +9,8 @@ import (
 type Repository interface {
 	FindByNameProduct(name_product string) ([]User, error)
 	FindByEmail(name_product string) ([]User, error)
+	FindByID(ID int) (User, error)
+	Update(user User) (User, error)
 	CreateIfNotExistOrUpdateIfExist(email string) ([]User, error)
 }
 
@@ -48,4 +50,17 @@ func (r *repository) CreateIfNotExistOrUpdateIfExist(email string) ([]User, erro
 	err := r.db.Where(User{Email_user: email}).Assign(User{Email_user: email}).FirstOrCreate(&User{}).Error
 
 	return user, err
+}
+
+func (r *repository) FindByID(ID int) (User, error) {
+	var allProducts User
+	err := r.db.Find(&allProducts, ID).Error
+
+	return allProducts, err
+}
+
+func (r *repository) Update(allProduct User) (User, error) {
+	err := r.db.Save(&allProduct).Error
+
+	return allProduct, err
 }

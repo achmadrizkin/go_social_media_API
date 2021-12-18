@@ -6,6 +6,7 @@ import (
 
 type Repository interface {
 	JoinUserToUserFollowers(name_user string) ([]UserFollower, error)
+	Create(userFollower UserFollower) (UserFollower, error)
 }
 
 type repository struct {
@@ -26,4 +27,10 @@ func (r *repository) JoinUserToUserFollowers(name_user string) ([]UserFollower, 
 	err := r.db.Table("user_followers").Select("user_followers.name_user, user_followers.email_user, user_followers.image_url, user_followers.user_id, user_followers.id").Joins("left join users on users.email_user = user_followers.user_id").Where("users.email_user = ?", name_user).Find(&comment).Error
 
 	return comment, err
+}
+
+func (r *repository) Create(userFollower UserFollower) (UserFollower, error) {
+	err := r.db.Create(&userFollower).Error
+
+	return userFollower, err
 }

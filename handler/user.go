@@ -1,10 +1,13 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/achmadrizkin/go_social_media_API/user"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type userHandler struct {
@@ -13,6 +16,25 @@ type userHandler struct {
 
 func NewBookHandler(userService user.Service) *userHandler {
 	return &userHandler{userService}
+}
+
+func (h *userHandler) GetUserById(c *gin.Context) {
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	// call service
+	b, err := h.userService.FindByID(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H {
+			"error": err,
+		})
+	}
+
+	allproductsResponse := converToAllUserResponse(b)
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": allproductsResponse,
+	})
 }
 
 func (h *userHandler) GetUserByName(c *gin.Context) {
@@ -61,6 +83,37 @@ func (h *userHandler) GetUserByEmail(c *gin.Context) {
 			"data": booksResponse,
 		})
 	}
+}
+
+func (h *userHandler) UpdateUser(c *gin.Context) {
+	var u user.UserRequest
+
+	err := c.ShouldBindJSON(&u)
+
+	if err != nil {
+		// log.Fatal(err) -> kalau terjadi error, server mati
+		for _, e := range err.(validator.ValidationErrors) {
+			errMessage := fmt.Sprintf("Error on filled %s, condition: %s", e.Field(), e.ActualTag())
+			c.JSON(http.StatusBadRequest, errMessage)
+
+			// gunakan return untuk tidak melanjutkan yang dibawah
+			return
+		}
+	}
+
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+	allproducts, err := h.userService.Update(id, u)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": allproducts,
+	})
 }
 
 func (h *userHandler) CreateIfNotExistOrUpdateIfExist(c *gin.Context) {

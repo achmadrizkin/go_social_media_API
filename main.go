@@ -9,6 +9,7 @@ import (
 	"github.com/achmadrizkin/go_social_media_API/handler"
 	"github.com/achmadrizkin/go_social_media_API/reels"
 	"github.com/achmadrizkin/go_social_media_API/user"
+	"github.com/achmadrizkin/go_social_media_API/like"
 	userfollower "github.com/achmadrizkin/go_social_media_API/user_follower"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
@@ -27,7 +28,7 @@ func main() {
 		log.Fatal("DB Connection Error")
 	}
 
-	db.AutoMigrate(&user.User{}, &explore.Explore{}, &reels.Reels{}, &allproducts.AllProduct{}, &comment.Comment{}, &userfollower.UserFollower{})
+	db.AutoMigrate(&user.User{}, &explore.Explore{}, &reels.Reels{}, &allproducts.AllProduct{}, &comment.Comment{}, &userfollower.UserFollower{}, &like.Like{})
 
 	// API Versioning
 	v1 := r.Group("/v1")
@@ -39,14 +40,16 @@ func main() {
 
 	v1.GET("/users/:name_user", userHandler.GetUserByName)
 	v1.GET("/users/email/:email_user", userHandler.GetUserByEmail)
+	v1.GET("/users/id/:id", userHandler.GetUserById)
 	v1.POST("/users/a/:email_user", userHandler.CreateIfNotExistOrUpdateIfExist)
+	v1.PUT("/users/id/:id", userHandler.UpdateUser)
 
 	// EXPLORE
 	exploreRepository := explore.NewRepository(db)
 	exploreService := explore.NewService(exploreRepository)
 	exploreHandler := handler.NewExploreHandler(exploreService)
 
-	v1.POST("/post", exploreHandler.PostExploreHandler)
+	v1.POST("/explore/a/post", exploreHandler.PostExploreHandler)
 	v1.GET("/explore/:user", exploreHandler.GetExploreNotUserAndOrderByLike)
 	v1.GET("/explore/user/:email", exploreHandler.GetExploreByEmailAndOrderByCreateAt)
 	v1.GET("/explore/home/:email", exploreHandler.GetUserFollowingPost)
@@ -92,6 +95,21 @@ func main() {
 	userFollowersHandler := handler.NewUserFollowerHandler(userFollowersService)
 
 	v1.GET("/user/followers/:user", userFollowersHandler.GetJoinUserToUserFollowers)
+
+	// LIKE
+	likeRepository := like.NewRepository(db)
+	likeService := like.NewService(likeRepository)
+	likeHandler := handler.NewLikeHandler(likeService)
+
+	v1.POST("/post/like", likeHandler.PostLikeHandler)
+	v1.GET("/post/like/:id/:email_user", likeHandler.GetLikeByUser)
+
+	// USER FOLLOWING
+	userFollowingRepository := userfollower.NewRepository(db)
+	userFollowingService := userfollower.NewService(userFollowingRepository)
+	userFollowingHandler := handler.NewUserFollowerHandler(userFollowingService)
+
+	v1.POST("/users/following", userFollowingHandler.PostUserFollowerHandler)
 
 	r.Run(":3000")
 }
