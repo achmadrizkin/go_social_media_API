@@ -42,7 +42,11 @@ func main() {
 	v1.GET("/users/email/:email_user", userHandler.GetUserByEmail)
 	v1.GET("/users/id/:id", userHandler.GetUserById)
 	v1.POST("/users/a/:email_user", userHandler.CreateIfNotExistOrUpdateIfExist)
+	v1.POST("/users/a/:email_user/:id", userHandler.UpdateUserPost)
+	v1.POST("/users/following/:email_user/:id", userHandler.UpdateUserFollowing)
 	v1.PUT("/users/id/:id", userHandler.UpdateUser)
+	v1.POST("/users/following/a/:email_user", )
+
 
 	// EXPLORE
 	exploreRepository := explore.NewRepository(db)
@@ -95,6 +99,7 @@ func main() {
 	userFollowersHandler := handler.NewUserFollowerHandler(userFollowersService)
 
 	v1.GET("/user/followers/:user", userFollowersHandler.GetJoinUserToUserFollowers)
+	v1.POST("/user/followers", userFollowersHandler.PostUserFollowerHandler)
 
 	// LIKE
 	likeRepository := like.NewRepository(db)

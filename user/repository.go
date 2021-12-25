@@ -12,6 +12,9 @@ type Repository interface {
 	FindByID(ID int) (User, error)
 	Update(user User) (User, error)
 	CreateIfNotExistOrUpdateIfExist(email string) ([]User, error)
+	UpdatePost(email string, post int) ([]User, error)
+	UpdateUserFollowing(email string, post int) ([]User, error)
+	UpdateUserFollowers(email string, post int) ([]User, error)
 }
 
 type repository struct {
@@ -48,6 +51,27 @@ func (r *repository) FindByEmail(email string) ([]User, error) {
 func (r *repository) CreateIfNotExistOrUpdateIfExist(email string) ([]User, error) {
 	var user []User 
 	err := r.db.Where(User{Email_user: email}).Assign(User{Email_user: email}).FirstOrCreate(&User{}).Error
+
+	return user, err
+}
+
+func (r *repository) UpdatePost(email string, post int) ([]User, error) {
+	var user []User 
+	err := r.db.Where(User{Email_user: email}).Assign(User{Email_user: email, Post: post}).FirstOrCreate(&User{}).Error
+
+	return user, err
+}
+
+func (r *repository) UpdateUserFollowing(email string, post int) ([]User, error) {
+	var user []User 
+	err := r.db.Where(User{Email_user: email}).Assign(User{Email_user: email, Following: post}).FirstOrCreate(&User{}).Error
+
+	return user, err
+}
+
+func (r *repository) UpdateUserFollowers(email string, post int) ([]User, error) {
+	var user []User 
+	err := r.db.Where(User{Email_user: email}).Assign(User{Email_user: email, Followers: post}).FirstOrCreate(&User{}).Error
 
 	return user, err
 }

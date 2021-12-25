@@ -25,7 +25,7 @@ func (h *userHandler) GetUserById(c *gin.Context) {
 	// call service
 	b, err := h.userService.FindByID(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H {
+		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err,
 		})
 	}
@@ -139,6 +139,85 @@ func (h *userHandler) CreateIfNotExistOrUpdateIfExist(c *gin.Context) {
 		})
 	}
 }
+
+func (h *userHandler) UpdateUserPost(c *gin.Context) {
+	email_user := c.Param("email_user")
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	b, err := h.userService.UpdatePost(email_user, id)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+	}
+
+	var booksResponse []user.UserResponse
+	for _, b := range b {
+		bookResponse := converToAllUserResponse(b)
+		booksResponse = append(booksResponse, bookResponse)
+	}
+
+	if booksResponse != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"data": booksResponse,
+		})
+	}
+}
+
+func (h *userHandler) UpdateUserFollowing(c *gin.Context) {
+	email_user := c.Param("email_user")
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	b, err := h.userService.UpdateUserFollowing(email_user, id)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+	}
+
+	var booksResponse []user.UserResponse
+	for _, b := range b {
+		bookResponse := converToAllUserResponse(b)
+		booksResponse = append(booksResponse, bookResponse)
+	}
+
+	if booksResponse != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"data": booksResponse,
+		})
+	}
+}
+
+func (h *userHandler) UpdateUserFollowers(c *gin.Context) {
+	email_user := c.Param("email_user")
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	b, err := h.userService.UpdateUserFollowers(email_user, id)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+	}
+
+	var booksResponse []user.UserResponse
+	for _, b := range b {
+		bookResponse := converToAllUserResponse(b)
+		booksResponse = append(booksResponse, bookResponse)
+	}
+
+	if booksResponse != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"data": booksResponse,
+		})
+	}
+}
+
 
 func converToAllUserResponse(b user.User) user.UserResponse {
 	return user.UserResponse{

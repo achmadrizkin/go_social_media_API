@@ -6,6 +6,9 @@ type Service interface {
 	FindByID(ID int) (User, error)
 	Update(id int, user UserRequest) (User, error)
 	CreateIfNotExistOrUpdateIfExist(email string) ([]User, error)
+	UpdatePost(email string, post int) ([]User, error)
+	UpdateUserFollowing(email string, post int) ([]User, error)
+	UpdateUserFollowers(email string, post int) ([]User, error)
 }
 
 type service struct {
@@ -34,6 +37,23 @@ func (s *service) CreateIfNotExistOrUpdateIfExist(email string) ([]User, error) 
 	// return s.repository.FindAll()
 }
 
+func (s *service) UpdateUserFollowing(email string, post int) ([]User, error) {
+	users, err := s.repository.UpdateUserFollowing(email, post)
+	return users, err
+	// return s.repository.FindAll()
+}
+
+func (s *service) UpdateUserFollowers(email string, post int) ([]User, error) {
+	users, err := s.repository.UpdateUserFollowers(email, post)
+	return users, err
+	// return s.repository.FindAll()
+}
+
+func (s *service) UpdatePost(email string, post int) ([]User, error) {
+	users, err := s.repository.UpdatePost(email, post)
+	return users, err
+	// return s.repository.FindAll()
+}
 
 func (s *service) FindByID(ID int) (User, error) {
 	books, err := s.repository.FindByID(ID)
