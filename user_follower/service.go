@@ -20,7 +20,6 @@ func (s *service) JoinUserToUserFollowers(name_user string) ([]UserFollower, err
 
 func (s *service) Create(userFollowerRequest UserFollowerRequest) (UserFollower, error) {
 	book := UserFollower {
-		Id:         userFollowerRequest.Id,
 		User_id:    userFollowerRequest.User_id,
 		Name_user:  userFollowerRequest.Name_user,
 		Email_user: userFollowerRequest.Email_user,

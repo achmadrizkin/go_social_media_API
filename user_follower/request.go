@@ -1,7 +1,6 @@
 package userfollower
 
 type UserFollowerRequest struct {
-	Id         int    `json:"id" binding:"required"`
 	User_id    string `json:"user_id" binding:"required"`
 	Name_user  string `json:"name_user" binding:"required"`
 	Email_user string `json:"email_user" binding:"required"`

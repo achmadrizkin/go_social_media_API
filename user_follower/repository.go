@@ -6,7 +6,7 @@ import (
 
 type Repository interface {
 	JoinUserToUserFollowers(name_user string) ([]UserFollower, error)
-	Create(userFollower UserFollower) (UserFollower, error)
+	Create(comment UserFollower) (UserFollower, error)
 }
 
 type repository struct {

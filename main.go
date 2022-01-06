@@ -10,7 +10,7 @@ import (
 	"github.com/achmadrizkin/go_social_media_API/reels"
 	"github.com/achmadrizkin/go_social_media_API/user"
 	"github.com/achmadrizkin/go_social_media_API/like"
-	userfollower "github.com/achmadrizkin/go_social_media_API/user_follower"
+	"github.com/achmadrizkin/go_social_media_API/user_follower"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -99,7 +99,7 @@ func main() {
 	userFollowersHandler := handler.NewUserFollowerHandler(userFollowersService)
 
 	v1.GET("/user/followers/:user", userFollowersHandler.GetJoinUserToUserFollowers)
-	v1.POST("/user/followers", userFollowersHandler.PostUserFollowerHandler)
+	v1.POST("/user/a/followers", userFollowersHandler.PostUserFollowerHandler)
 
 	// LIKE
 	likeRepository := like.NewRepository(db)
@@ -108,13 +108,6 @@ func main() {
 
 	v1.POST("/post/like", likeHandler.PostLikeHandler)
 	v1.GET("/post/like/:id/:email_user", likeHandler.GetLikeByUser)
-
-	// USER FOLLOWING
-	userFollowingRepository := userfollower.NewRepository(db)
-	userFollowingService := userfollower.NewService(userFollowingRepository)
-	userFollowingHandler := handler.NewUserFollowerHandler(userFollowingService)
-
-	v1.POST("/users/following", userFollowingHandler.PostUserFollowerHandler)
 
 	r.Run(":3000")
 }
